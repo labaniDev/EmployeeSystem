@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -74,4 +76,25 @@ public class EmployeeService {
 		return null;
 		
 	 }
+	 public void updateEmployee(EmployeeDTO employeeDTO) {
+			try {
+				LOGGER.debug("Inside Update Employee:"+employeeDTO.toString());
+				Optional<Employee> empOptional=employeeRepo.findById(employeeDTO.getId());
+				if(empOptional.isPresent()) {
+					Employee emp=empOptional.get();
+					 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+					  LocalDateTime now = LocalDateTime.now();  
+					  emp.setCreated_on(dtf.format(now));
+					  emp.setEmail(employeeDTO.getEmail());
+					  emp.setPassword(encoder.encode(employeeDTO.getPassword()));
+					  emp.setPhone(employeeDTO.getPhone());
+					  emp.setName(employeeDTO.getName());
+					  emp.setStatus(Status.active);
+					  employeeRepo.save(emp);
+				}
+			}catch(Exception ex){
+				ex.printStackTrace();
+				LOGGER.error("Exception in update Employees:"+ex.getMessage());
+			}
+		}
 }

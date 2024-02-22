@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.EmpExpDTO;
+import com.example.demo.dto.EmployeeDTO;
 import com.example.demo.dto.ExperienceDTO;
 import com.example.demo.entity.Employee;
 import com.example.demo.entity.Experience;
@@ -66,8 +67,9 @@ public class ExperienceService {
 	
 	public void updateExperience(EmpExpDTO empExpDTO) {
 		try {
+			
+			LOGGER.debug("Inside updateExperience:");
 			for(ExperienceDTO experienceDTO:empExpDTO.getExperiences()) {
-			LOGGER.debug("Inside updateExperience:"+experienceDTO.toString());
 		Optional<Experience> expOptional=experienceRepo.findById(experienceDTO.getId());
 		Optional<Employee> empOptional=employeeRepo.findById(empExpDTO.getEmployeeId());
 		if(expOptional.isPresent()&&empOptional.isPresent()) {
@@ -95,5 +97,7 @@ public class ExperienceService {
 	            .map(exp-> modelMapper.map(exp, ExperienceDTO.class))
 	            .collect(Collectors.toList());
 	}
+	
+	
 
 }
